@@ -1,0 +1,123 @@
+<html>
+  <head>
+    <script
+        src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+                integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+                crossorigin="anonymous"></script></script>
+    <style>
+.main {
+  padding-top: 50px;
+  width: 400px;
+  margin: auto;
+  font-family: Lato;
+}
+.time {
+  font-size: 7em;
+  padding:0px;
+  margin: 0px;
+  text-align: center;
+}
+.time:hover {
+  cursor: pointer;
+  color: grey;
+}
+.counts li{
+  list-style-type: none;
+  border: 1px solid black;
+  border-radius: 30px;
+  display:inline-block;
+  padding: 10px 15px 10px 15px;
+  margin-right: 5px;
+  border-color: gray;
+}
+ul {
+  color: gray;
+  padding:0px;
+  margin: 0px;
+  padding-top: 20px;
+}
+hr{
+  color: lightgray;
+}
+
+    </style>
+  </head>
+  <body>
+    <div class='main'>
+      <h1 class="time" id="time">12:51</h1>
+      <hr/>
+      <ul id="counts" class="counts">
+        <li>0</li>
+      </ul>
+    </div>
+  </body>
+  <script type="application/javascript">
+    var date = new Date();
+    var p_seconds = 45 * 60;
+    var start_seconds
+    var end_seconds = 0;
+    var num_poms = 0;
+
+    function replace_poms_counts(){
+      var lis = "";
+      for(i=1; i <= num_poms; i++){
+        lis += "<li>" + i + "</li>"
+      }
+      $("#counts").html(lis);
+    }
+
+    function current_time(d){
+        var h = d.getHours();
+        var m = d.getMinutes();
+
+        if(h > 12){
+          h -= 12
+        }else if(h == 0){
+          h = 12
+        }
+        if(m < 10){
+          m = "0"+m;
+        }
+        return h + ":" + m
+    }
+
+    $("#time").html(current_time(date))
+
+    function tick(){
+      var date = new Date();
+      var hours = 0;
+      var minutes = 0;
+      if((date.getTime() / 1000) >= end_seconds && end_seconds != 0){
+        num_poms += 1;
+        end_seconds = 0;
+        replace_poms_counts();
+      }
+
+      if(end_seconds == 0){
+        $("#time").html(current_time(date));
+      }else {
+        var t = date.getTime() / 1000;
+        var diff = end_seconds - t
+        hours = parseInt((diff / 60))
+        minutes =  parseInt(diff % 60)
+        if(hours < 10){
+          hours = "0"+hours;
+        }
+        if(minutes < 10){
+          minutes = "0"+minutes;
+        }
+        $("#time").html(hours + ":" + minutes);
+      }
+
+    }
+    setInterval(tick, 1000);
+    $(".time").click(function(){
+      if(end_seconds > 0){
+        return
+      }
+      var d = new Date();
+      end_seconds = (d.getTime() / 1000) + p_seconds;
+    })
+
+  </script>
+</html>
