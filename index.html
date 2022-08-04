@@ -114,19 +114,30 @@ function beep(duration, frequency, volume){
       $("#counts").html(lis);
     }
 
-    function current_time(d){
-        var h = d.getHours();
-        var m = d.getMinutes();
-
+    function am_pm(h){
         if(h > 12){
           h -= 12
         }else if(h == 0){
           h = 12
         }
+
+      return h
+    }
+
+    function current_time(d){
+        var h = d.getHours();
+        var m = d.getMinutes();
+
+        var temp_h = h;
+        temp_h = temp_h - 3;
+        if(temp_h < 0){
+          temp_h += 12;
+        }
+
         if(m < 10){
           m = "0"+m;
         }
-        return h + ":" + m + " / " + (h - 3) + ":" + m
+        return am_pm(h) + ":" + m + " / " + am_pm(temp_h) + ":" + m
     }
 
     $("#time").html(current_time(date))
